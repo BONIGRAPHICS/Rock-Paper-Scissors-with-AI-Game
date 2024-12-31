@@ -1,8 +1,17 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cctype> // For tolower() function
 
 using namespace std;
+
+// Function to convert the input string to lowercase
+string toLowerCase(string input) {
+    for (char &c : input) {
+        c = tolower(c); // Convert each character to lowercase
+    }
+    return input;
+}
 
 // Function to get the AI's random choice: Rock, Paper, or Scissors
 string getAIChoice() {
@@ -48,12 +57,20 @@ int main() {
         string playerChoice;
         cin >> playerChoice;  // Get the player's choice
 
+        // Convert player input to lowercase to handle case insensitivity
+        playerChoice = toLowerCase(playerChoice);
+
         // Validate the player's input
-        if (playerChoice != "Rock" && playerChoice != "Paper" && playerChoice != "Scissors") {
+        if (playerChoice != "rock" && playerChoice != "paper" && playerChoice != "scissors") {
             // If the input is not Rock, Paper, or Scissors, prompt an error message
             cout << "Invalid choice! Please choose Rock, Paper, or Scissors." << endl;
             continue;  // Continue the loop to let the player try again
         }
+
+        // Capitalize the player's input to match AI choice (Rock, Paper, Scissors)
+        if (playerChoice == "rock") playerChoice = "Rock";
+        if (playerChoice == "paper") playerChoice = "Paper";
+        if (playerChoice == "scissors") playerChoice = "Scissors";
 
         cout << "You chose: " << playerChoice << endl; // Display the player's choice
 
@@ -69,11 +86,11 @@ int main() {
         cout << "Score: You " << playerWins << " - AI " << aiWins << " - Ties " << ties << endl;
 
         // Ask the player if they want to play again
-        cout << "Do you want to play again? (yes/no): ";
+        cout << "Do you want to play again? (yes/no OR y/n): ";
         cin >> playAgain;  // Get the player's decision to play again
     }
 
     cout << "Thanks for playing Rock, Paper, Scissors!" << endl; // Final message when the player exits
 
-    return 0;
+    return 0;  // End the program
 }
