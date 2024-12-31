@@ -33,28 +33,38 @@ string determineWinner(string playerChoice, string aiChoice) {
 int main() {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
-    cout << "Welcome to Rock, Paper, Scissors!" << endl;
-    cout << "Choose your move (Rock, Paper, Scissors): ";
-    
-    string playerChoice;
-    cin >> playerChoice;  // Get the player's choice
+    string playAgain = "yes";  // Variable to control the replay loop
 
-    // Validate the player's input
-    if (playerChoice != "Rock" && playerChoice != "Paper" && playerChoice != "Scissors") {
-        // If the input is not Rock, Paper, or Scissors, prompt an error message
-        cout << "Invalid choice! Please choose Rock, Paper, or Scissors." << endl;
-        return 1;  // Exit the program with an error code
+    while (playAgain == "yes" || playAgain == "y") { // Loop to allow multiple rounds
+        cout << "Welcome to Rock, Paper, Scissors!" << endl;
+        cout << "Choose your move (Rock, Paper, Scissors): ";
+        
+        string playerChoice;
+        cin >> playerChoice;  // Get the player's choice
+
+        // Validate the player's input
+        if (playerChoice != "Rock" && playerChoice != "Paper" && playerChoice != "Scissors") {
+            // If the input is not Rock, Paper, or Scissors, prompt an error message
+            cout << "Invalid choice! Please choose Rock, Paper, or Scissors." << endl;
+            continue;  // Continue the loop to let the player try again
+        }
+
+        cout << "You chose: " << playerChoice << endl; // Display the player's choice
+
+        // Get the AI's choice
+        string aiChoice = getAIChoice();
+        cout << "AI chooses: " << aiChoice << endl; // Display the AI's choice
+
+        // Determine and display the result of the game
+        string result = determineWinner(playerChoice, aiChoice);
+        cout << result << endl; // Display whether the player won, lost, or tied
+
+        // Ask the player if they want to play again
+        cout << "Do you want to play again? (yes/no): ";
+        cin >> playAgain;  // Get the player's decision to play again
     }
 
-    cout << "You chose: " << playerChoice << endl; // Display the player's choice
+    cout << "Thanks for playing Rock, Paper, Scissors!" << endl; // Final message when the player exits
 
-    // Get the AI's choice
-    string aiChoice = getAIChoice();
-    cout << "AI chooses: " << aiChoice << endl; // Display the AI's choice
-
-    // Determine and display the result of the game
-    string result = determineWinner(playerChoice, aiChoice);
-    cout << result << endl; // Display whether the player won, lost, or tied
-
-    return 0; 
+    return 0;  
 }
