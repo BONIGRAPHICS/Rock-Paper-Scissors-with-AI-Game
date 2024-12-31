@@ -16,16 +16,19 @@ string getAIChoice() {
 }
 
 // Function to determine the winner based on the player's and AI's choices
-string determineWinner(string playerChoice, string aiChoice) {
+string determineWinner(string playerChoice, string aiChoice, int &playerWins, int &aiWins, int &ties) {
     if (playerChoice == aiChoice) { // If both choices are the same, it's a tie
-        return "It's a tie!";
+        ties++;  // Increment tie count
+        return "It's a tie!";  // Inform the player that it was a tie
     }
     // If the player wins according to the rules of Rock, Paper, Scissors
     if ((playerChoice == "Rock" && aiChoice == "Scissors") || 
         (playerChoice == "Scissors" && aiChoice == "Paper") || 
         (playerChoice == "Paper" && aiChoice == "Rock")) {
+        playerWins++;  // Increment player win count
         return "You win!";  // Player wins
     } else {
+        aiWins++;  // Increment AI win count
         return "You lose!"; // AI wins
     }
 }
@@ -34,6 +37,9 @@ int main() {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
     string playAgain = "yes";  // Variable to control the replay loop
+
+    // Variables to track the score
+    int playerWins = 0, aiWins = 0, ties = 0;
 
     while (playAgain == "yes" || playAgain == "y") { // Loop to allow multiple rounds
         cout << "Welcome to Rock, Paper, Scissors!" << endl;
@@ -56,8 +62,11 @@ int main() {
         cout << "AI chooses: " << aiChoice << endl; // Display the AI's choice
 
         // Determine and display the result of the game
-        string result = determineWinner(playerChoice, aiChoice);
+        string result = determineWinner(playerChoice, aiChoice, playerWins, aiWins, ties);
         cout << result << endl; // Display whether the player won, lost, or tied
+
+        // Display current score
+        cout << "Score: You " << playerWins << " - AI " << aiWins << " - Ties " << ties << endl;
 
         // Ask the player if they want to play again
         cout << "Do you want to play again? (yes/no): ";
@@ -66,5 +75,5 @@ int main() {
 
     cout << "Thanks for playing Rock, Paper, Scissors!" << endl; // Final message when the player exits
 
-    return 0;  
+    return 0;
 }
