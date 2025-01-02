@@ -67,6 +67,7 @@ int main() {
         cout << "1. Start Game" << endl;
         cout << "2. View Rules" << endl;
         cout << "3. Exit" << endl;
+        cout << "4. Reset Scores" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -114,13 +115,21 @@ int main() {
         } else if (choice == 2) {
             // Display the rules
             displayRules();
+
         } else if (choice == 3) {
             // Exit the program
             cout << "Thanks for playing Rock, Paper, Scissors!" << endl;
             break;
+
+        } else if (choice == 4) {
+            // Reset the scores
+            playerWins = 0;
+            aiWins = 0;
+            ties = 0;
+            cout << "\nScores have been reset!" << endl;
         } else {
             // Handle invalid menu choices
-            cout << "Invalid choice! Please select 1, 2, or 3." << endl;
+            cout << "Invalid choice! Please select 1, 2, 3, or 4." << endl;
         }
     }
 
