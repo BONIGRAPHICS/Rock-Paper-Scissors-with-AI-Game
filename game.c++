@@ -86,11 +86,18 @@ int main() {
         cout << "Score: You " << playerWins << " - AI " << aiWins << " - Ties " << ties << endl;
 
         // Ask the player if they want to play again
-        cout << "Do you want to play again? (yes/no OR y/n): ";
+        cout << "Do you want to play again? (yes/no): ";
         cin >> playAgain;  // Get the player's decision to play again
     }
 
+    // Display the game summary
+    int totalRounds = playerWins + aiWins + ties; // Calculate total rounds played
+    cout << "\n--- Game Summary ---" << endl;
+    cout << "Total rounds played: " << totalRounds << endl;
+    cout << "You won: " << playerWins << " times" << endl;
+    cout << "AI won: " << aiWins << " times" << endl;
+    cout << "Ties: " << ties << endl;
     cout << "Thanks for playing Rock, Paper, Scissors!" << endl; // Final message when the player exits
 
-    return 0;  // End the program
+    return 0; 
 }
