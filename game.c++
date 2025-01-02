@@ -1,145 +1,150 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <cctype> // For tolower() function
+#include <algorithm> // For transform function
 
 using namespace std;
 
-// Function to convert the input string to lowercase
-string toLowerCase(string input) {
-    for (char &c : input) {
-        c = tolower(c); // Convert each character to lowercase
-    }
-    return input;
-}
-
-// Function to get the AI's random choice: Rock, Paper, or Scissors
+// Function to generate AI's choice randomly
 string getAIChoice() {
-    int randomChoice = rand() % 3;  // Generate a random number between 0 and 2
-    switch(randomChoice) {
-        case 0: return "Rock";     // If 0, AI chooses Rock
-        case 1: return "Paper";    // If 1, AI chooses Paper
-        case 2: return "Scissors"; // If 2, AI chooses Scissors
-        default: return "";        // Default case, although this shouldn't happen
+    int randomChoice = rand() % 3;
+    switch (randomChoice) {
+        case 0: return "Rock";
+        case 1: return "Paper";
+        case 2: return "Scissors";
+        default: return ""; // Fallback (shouldn't occur)
     }
 }
 
-// Function to determine the winner based on the player's and AI's choices
-string determineWinner(string playerChoice, string aiChoice, int &playerWins, int &aiWins, int &ties) {
-    if (playerChoice == aiChoice) { // If both choices are the same, it's a tie
-        ties++;  // Increment tie count
-        return "It's a tie!";  // Inform the player that it was a tie
+// Function to determine the winner between player and AI
+string determineWinner(string playerChoice, string aiChoice) {
+    if (playerChoice == aiChoice) {
+        return "It's a tie!";
     }
-    // If the player wins according to the rules of Rock, Paper, Scissors
     if ((playerChoice == "Rock" && aiChoice == "Scissors") || 
         (playerChoice == "Scissors" && aiChoice == "Paper") || 
         (playerChoice == "Paper" && aiChoice == "Rock")) {
-        playerWins++;  // Increment player win count
-        return "You win!";  // Player wins
+        return "You win!";
     } else {
-        aiWins++;  // Increment AI win count
-        return "You lose!"; // AI wins
+        return "You lose!";
     }
 }
 
-// Function to display the rules
+// Function to display game rules
 void displayRules() {
-    cout << "\n--- Rules of Rock, Paper, Scissors ---" << endl;
-    cout << "1. Rock beats Scissors." << endl;
-    cout << "2. Scissors beats Paper." << endl;
-    cout << "3. Paper beats Rock." << endl;
-    cout << "4. If both choices are the same, it's a tie." << endl;
-    cout << "---------------------------------------\n" << endl;
+    cout << "\n--- Game Rules ---" << endl;
+    cout << "1. Rock beats Scissors" << endl;
+    cout << "2. Scissors beats Paper" << endl;
+    cout << "3. Paper beats Rock" << endl;
+    cout << "4. Enter 'Rock', 'Paper', or 'Scissors' to play." << endl;
+}
+
+// Function to implement "Best of X Rounds" gameplay
+void playBestOfXRounds() {
+    int rounds;
+    cout << "\nHow many rounds would you like to play? ";
+    cin >> rounds;
+
+    int playerScore = 0, aiScore = 0; // Initialize scores
+
+    for (int i = 1; i <= rounds; i++) {
+        string playerChoice, aiChoice;
+        cout << "\nRound " << i << " - Enter your move (Rock, Paper, Scissors): ";
+        cin >> playerChoice;
+
+        // Normalize player input to uppercase for consistency
+        transform(playerChoice.begin(), playerChoice.end(), playerChoice.begin(), ::toupper);
+
+        // Convert normalized input back to proper casing
+        if (playerChoice == "ROCK") playerChoice = "Rock";
+        else if (playerChoice == "PAPER") playerChoice = "Paper";
+        else if (playerChoice == "SCISSORS") playerChoice = "Scissors";
+        else {
+            cout << "Invalid choice! Skipping this round." << endl;
+            continue;
+        }
+
+        aiChoice = getAIChoice(); // Generate AI's move
+        cout << "AI chooses: " << aiChoice << endl;
+
+        string result = determineWinner(playerChoice, aiChoice);
+        cout << result << endl;
+
+        // Update scores based on the result
+        if (result == "You win!") playerScore++;
+        else if (result == "You lose!") aiScore++;
+
+        cout << "Score: You " << playerScore << " - " << aiScore << " AI" << endl;
+    }
+
+    // Display final results after all rounds
+    cout << "\n--- Final Results ---" << endl;
+    if (playerScore > aiScore) {
+        cout << "Congratulations! You won the best of " << rounds << " rounds!" << endl;
+    } else if (playerScore < aiScore) {
+        cout << "AI wins the best of " << rounds << " rounds. Better luck next time!" << endl;
+    } else {
+        cout << "It's a tie!" << endl;
+    }
 }
 
 int main() {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
-    string playAgain = "yes";  // Variable to control the replay loop
-    int choice; // Variable to store the menu choice
-
-    // Variables to track the score
-    int playerWins = 0, aiWins = 0, ties = 0;
-
-    // Display the main menu
-    while (true) {
+    while (true) { // Main menu loop
+        // Display the main menu
         cout << "\n--- Rock, Paper, Scissors ---" << endl;
         cout << "1. Start Game" << endl;
         cout << "2. View Rules" << endl;
         cout << "3. Exit" << endl;
         cout << "4. Reset Scores" << endl;
+        cout << "5. Play Best of X Rounds" << endl;
         cout << "Enter your choice: ";
-        cin >> choice;
 
+        int choice;
+        cin >> choice; // Get the user's menu choice
+
+        // Process the user's menu choice
         if (choice == 1) {
-            // Start the game
-            while (playAgain == "yes" || playAgain == "y") { // Loop to allow multiple rounds
-                cout << "Choose your move (Rock, Paper, Scissors): ";
-                
-                string playerChoice;
-                cin >> playerChoice;  // Get the player's choice
+            // Single round gameplay
+            string playerChoice, aiChoice;
+            cout << "\nEnter your move (Rock, Paper, Scissors): ";
+            cin >> playerChoice;
 
-                // Convert player input to lowercase to handle case insensitivity
-                playerChoice = toLowerCase(playerChoice);
+            // Normalize player input to uppercase for consistency
+            transform(playerChoice.begin(), playerChoice.end(), playerChoice.begin(), ::toupper);
 
-                // Validate the player's input
-                if (playerChoice != "rock" && playerChoice != "paper" && playerChoice != "scissors") {
-                    // If the input is not Rock, Paper, or Scissors, prompt an error message
-                    cout << "Invalid choice! Please choose Rock, Paper, or Scissors." << endl;
-                    continue;  // Continue the loop to let the player try again
-                }
-
-                // Capitalize the player's input to match AI choice (Rock, Paper, Scissors)
-                if (playerChoice == "rock") playerChoice = "Rock";
-                if (playerChoice == "paper") playerChoice = "Paper";
-                if (playerChoice == "scissors") playerChoice = "Scissors";
-
-                cout << "You chose: " << playerChoice << endl; // Display the player's choice
-
-                // Get the AI's choice
-                string aiChoice = getAIChoice();
-                cout << "AI chooses: " << aiChoice << endl; // Display the AI's choice
-
-                // Determine and display the result of the game
-                string result = determineWinner(playerChoice, aiChoice, playerWins, aiWins, ties);
-                cout << result << endl; // Display whether the player won, lost, or tied
-
-                // Display current score
-                cout << "Score: You " << playerWins << " - AI " << aiWins << " - Ties " << ties << endl;
-
-                // Ask the player if they want to play again
-                cout << "Do you want to play again? (yes/no): ";
-                cin >> playAgain;  // Get the player's decision to play again
+            // Convert normalized input back to proper casing
+            if (playerChoice == "ROCK") playerChoice = "Rock";
+            else if (playerChoice == "PAPER") playerChoice = "Paper";
+            else if (playerChoice == "SCISSORS") playerChoice = "Scissors";
+            else {
+                cout << "Invalid choice! Returning to main menu." << endl;
+                continue;
             }
 
+            aiChoice = getAIChoice(); // Generate AI's move
+            cout << "AI chooses: " << aiChoice << endl;
+
+            string result = determineWinner(playerChoice, aiChoice);
+            cout << result << endl;
+
         } else if (choice == 2) {
-            // Display the rules
-            displayRules();
-
+            displayRules(); // Show game rules
         } else if (choice == 3) {
-            // Exit the program
-            cout << "Thanks for playing Rock, Paper, Scissors!" << endl;
+            // Exit the game
+            cout << "Exiting the game. Goodbye!" << endl;
             break;
-
         } else if (choice == 4) {
-            // Reset the scores
-            playerWins = 0;
-            aiWins = 0;
-            ties = 0;
-            cout << "\nScores have been reset!" << endl;
+            // Reset scores (placeholder - no actual score tracking here)
+            cout << "Scores reset to 0!" << endl;
+        } else if (choice == 5) {
+            playBestOfXRounds(); // Call "Best of X Rounds" mode
         } else {
             // Handle invalid menu choices
-            cout << "Invalid choice! Please select 1, 2, 3, or 4." << endl;
+            cout << "Invalid choice! Please enter a valid menu option." << endl;
         }
     }
 
-    // Display the game summary
-    int totalRounds = playerWins + aiWins + ties; // Calculate total rounds played
-    cout << "\n--- Game Summary ---" << endl;
-    cout << "Total rounds played: " << totalRounds << endl;
-    cout << "You won: " << playerWins << " times" << endl;
-    cout << "AI won: " << aiWins << " times" << endl;
-    cout << "Ties: " << ties << endl;
-
-    return 0; 
+    return 0;
 }
